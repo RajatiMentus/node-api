@@ -22,8 +22,9 @@ client.connect(function(err) {
                 console.error(err);
                 return;
             }
-            res.json(results.rows)
+           
         });
+         res.send('Welcome to iMentus!');
     });
 });
 app.listen(3000, () => console.log('Listening on port 3000..'));
