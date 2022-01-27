@@ -12,19 +12,16 @@ const client = new Client({
 
 const query = 'SELECT "ID", "Text" FROM public."Question"';
 
-client.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected!");
-    
-    app.get('/', (req, res) => {
-        client.query(query, (err, results) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-           res.json(results.rows);
-        });
-    });
+client.connect();
+
+app.get('/', (req, res) => {
+ client.query(query, (err, results) => {
+   if (err) {
+      console.error(err);
+      return;
+   }
+    res.json(results.rows);
+  });
 });
 app.listen(process.env.PORT || 3000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
