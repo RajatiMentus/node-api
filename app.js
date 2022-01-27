@@ -10,19 +10,36 @@ const client = new Client({
     port: 5432,
 })
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+
 const query = 'SELECT "ID", "Text" FROM public."Question"';
 
-client.connect();
+client.connect((err, client, release) => {
+    if (err) {
+        return console.error(
+            'Error acquiring client', err.stack)
+    }
+    client.query('SELECT NOW()', (err, result) => {
+        if (err) {
+            return console.error(
+                'Error executing query', err.stack)
+        }
+        console.log("Connected to Database !")
+    })
+});
 
 app.get('/', (req, res) => {
- client.query(query, (err, results) => {
-   if (err) {
-      console.error(err);
-      return;
-   }
-    res.json(results.rows);
-  });
+    client.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        res.json(results.rows);
+    });
 });
-app.listen(process.env.PORT || 3000, function(){
-  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+
+app.listen(process.env.PORT || 3000, function () {
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
